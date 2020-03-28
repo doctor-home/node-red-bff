@@ -7,13 +7,6 @@
         "info": "This is the \"backend-for-frontend\" API"
     },
     {
-        "id": "b2c45754.4ed748",
-        "type": "tab",
-        "label": "Test",
-        "disabled": false,
-        "info": ""
-    },
-    {
         "id": "e00d1491.279808",
         "type": "tab",
         "label": "Twilio Main Flow",
@@ -53,134 +46,6 @@
         "z": "",
         "name": "audio-baseurl",
         "url": "http://doctor-at-home-bff.eastus.azurecontainer.io:8080/audio/ivr-audio/"
-    },
-    {
-        "id": "64eb62c8.62f10c",
-        "type": "debug",
-        "z": "b2c45754.4ed748",
-        "name": "debug request payload",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "x": 530,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "ecec5795.895548",
-        "type": "inject",
-        "z": "b2c45754.4ed748",
-        "name": "call extract-text API (with valid request)",
-        "topic": "",
-        "payload": "{\"config\":{\"viewPlugin\":{\"plugin\":{\"idPlugin\":{\"mrzConfig\":{}}}}},\"license\":\"eyAiYW5kcm9pZElkZW50aWZpZXIiOiBbICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlRGV2IiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVRQSIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlVGVzdCIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlU3RhZ2UiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVByb2QiLCAiZ2xvYmFsLnV0dS50YXhmcmVlbW9iaWxlYXBwIiBdLCAiZGVidWdSZXBvcnRpbmciOiAib3B0LW91dCIsICJpb3NJZGVudGlmaWVyIjogWyAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZURldiIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlUUEiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVRlc3QiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVN0YWdlIiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVQcm9kIiwgImdsb2JhbC51dHUudGF4ZnJlZW1vYmlsZWFwcCIgXSwgImpzSWRlbnRpZmllciI6IFsgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVEZXYiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVFBIiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVUZXN0IiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVTdGFnZSIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlUHJvZCIsICJnbG9iYWwudXR1LnRheGZyZWVtb2JpbGVhcHAiIF0sICJsaWNlbnNlS2V5VmVyc2lvbiI6IDIsICJtYWpvclZlcnNpb24iOiAiNCIsICJtYXhEYXlzTm90UmVwb3J0ZWQiOiAwLCAicGluZ1JlcG9ydGluZyI6IHRydWUsICJwbGF0Zm9ybSI6IFsgImlPUyIsICJBbmRyb2lkIiwgIldpbmRvd3MiLCAiSlMiLCAiV2ViIiBdLCAic2NvcGUiOiBbICJJRCIsICJNUloiIF0sICJzaG93UG9wVXBBZnRlckV4cGlyeSI6IHRydWUsICJzaG93V2F0ZXJtYXJrIjogZmFsc2UsICJ0b2xlcmFuY2VEYXlzIjogMTQsICJ2YWxpZCI6ICIyMDIwLTEwLTAyIiwgIndlYklkZW50aWZpZXIiOiBbICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlRGV2IiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVRQSIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlVGVzdCIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlU3RhZ2UiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVByb2QiLCAiZ2xvYmFsLnV0dS50YXhmcmVlbW9iaWxlYXBwIiBdLCAid2luZG93c0lkZW50aWZpZXIiOiBbICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlRGV2IiwgImNvbS51dHUuU3RhbmRBbG9uZVRheEZyZWVRQSIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlVGVzdCIsICJjb20udXR1LlN0YW5kQWxvbmVUYXhGcmVlU3RhZ2UiLCAiY29tLnV0dS5TdGFuZEFsb25lVGF4RnJlZVByb2QiLCAiZ2xvYmFsLnV0dS50YXhmcmVlbW9iaWxlYXBwIiBdIH0KTkE0OFo1dEFQbVhMSFZQckdUR2s3dnhWVWNBbmU2WEN4ZzllT1d6RVYvQmJDWGR4SGM1QUVHOGJROGZ4U3F0QgowT1ZQUWw1aXdoOWpGZDY4Ri9CSjlNQ1JRVFc2SjZQbURQNS9mZHgxZ0ppYUgzTXNLeHdKSXZFN3R1V0dyYTBBCjFCQlFpZXBrdGhUd2xZVTI0R04rSjJVdk10d0tSZEoxY2pXcnYvdTJSWnNCZmgyR2wzWi9rNUFIenA5SUYrNncKU1ZycjJ6ZitySXp3WE9nSDEyR3pRdEdMUkZ6MFRMZkk2eHJyQU9wYUsza3JtRTVGTXY1bGxKWjVoaUZYVEtHdgo4ZDhCNHFzWW1NQ0ZJRGNRUi9aK2U0YVNZZVgvcWVvc2FseWJNcUw0M21NSWNKNFRZdks4eS9ldGdtWFZrQTJ4CllKYjlxaWJ5ZHRhblBQc01mU1lPWnc9PQo=\"}",
-        "payloadType": "json",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 200,
-        "y": 220,
-        "wires": [
-            [
-                "77b0efff.f78c3",
-                "64eb62c8.62f10c"
-            ]
-        ]
-    },
-    {
-        "id": "77b0efff.f78c3",
-        "type": "http request",
-        "z": "b2c45754.4ed748",
-        "name": "POST /api/scan",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": true,
-        "url": "http://localhost:8080/api/scan",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 500,
-        "y": 220,
-        "wires": [
-            [
-                "9b7e2000.aa2d9"
-            ]
-        ]
-    },
-    {
-        "id": "9b7e2000.aa2d9",
-        "type": "debug",
-        "z": "b2c45754.4ed748",
-        "name": "debug response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "x": 760,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "70395059.81",
-        "type": "inject",
-        "z": "b2c45754.4ed748",
-        "name": "trigger a ping",
-        "topic": "",
-        "payload": "{\"message\":\"Ping\"}",
-        "payloadType": "json",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 110,
-        "y": 440,
-        "wires": [
-            [
-                "4dfe8251.8b542c"
-            ]
-        ]
-    },
-    {
-        "id": "4dfe8251.8b542c",
-        "type": "http request",
-        "z": "b2c45754.4ed748",
-        "name": "GET /api/ping",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": true,
-        "url": "http://localhost:8080/api/ping",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 380,
-        "y": 440,
-        "wires": [
-            [
-                "884a576b.92ecc8"
-            ]
-        ]
-    },
-    {
-        "id": "884a576b.92ecc8",
-        "type": "debug",
-        "z": "b2c45754.4ed748",
-        "name": "debug response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "x": 600,
-        "y": 440,
-        "wires": []
     },
     {
         "id": "2c7e2236.c1315e",
@@ -4156,5 +4021,15 @@
                 "ebe009f4.cbafe8"
             ]
         ]
+    },
+    {
+        "id": "d4be5235.aee97",
+        "type": "comment",
+        "z": "e00d1491.279808",
+        "name": "INTERNAL CONTROL - DO NOT CHANGE (for now)",
+        "info": "",
+        "x": 450,
+        "y": 40,
+        "wires": []
     }
 ]
