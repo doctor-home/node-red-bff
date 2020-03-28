@@ -2,7 +2,7 @@
  "nodes": {
   "node-red": {
    "name": "node-red",
-   "version": "1.0.3-git",
+   "version": "1.0.4-git",
    "local": false,
    "nodes": {
     "inject": {
@@ -371,7 +371,7 @@
   },
   "node-red-node-rbe": {
    "name": "node-red-node-rbe",
-   "version": "0.2.6",
+   "version": "0.2.8",
    "local": false,
    "nodes": {
     "rbe": {
@@ -388,7 +388,7 @@
   },
   "node-red-node-tail": {
    "name": "node-red-node-tail",
-   "version": "0.0.3",
+   "version": "0.1.1",
    "local": false,
    "nodes": {
     "tail": {
