@@ -1,6 +1,6 @@
 {
     "name": "ping-service",
-    "description": "mesh-red ping service (example)",
+    "description": "doctor-at-home-hackathon",
     "version": "0.0.1",
     "dependencies": {},
     "node-red": {
