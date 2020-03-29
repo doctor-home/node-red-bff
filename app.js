@@ -2,7 +2,7 @@
 
 var createError = require('http-errors');
 var express = require('express');
-var exphbs  = require('express-handlebars');
+var exphbs = require('express-handlebars');
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -26,18 +26,18 @@ var server = http.createServer(app);
 
 // Create the settings object - see default settings.js file for other options
 var settings = {
-  httpAdminRoot:"/editor",
+  httpAdminRoot: "/editor",
   httpNodeRoot: "/",
-  userDir:"./workspace",
+  userDir: "./workspace",
   flowFilePretty: true,
   flowFile: "flows.json",
   nodesDir: "./custom-nodes",
   credentialSecret: '(get this from keystore)',
   disableEditor: false,
   httpNodeCors: true,
-  ui : { path: 'dashboard' },
+  ui: { path: 'dashboard' },
 
-  httpNodeMiddleware: function(req,res,next) {
+  httpNodeMiddleware: function (req, res, next) {
     // Perform any processing on the request.
     // Be sure to call next() if the request should be passed
     // to the relevant HTTP In node.
@@ -47,34 +47,48 @@ var settings = {
   },
 
   // enables global context
-  functionGlobalContext: { 
-    os:require('os'),
+  functionGlobalContext: {
+    os: require('os'),
   },
 
   // Editor Theme and project configuration
   editorTheme: {
     projects: {
-        enabled: true
+      enabled: true
     }
   },
+  // adminAuth: {
+  //   users: [
+  //     {
+  //       username: "admin",
+  //       // use 'node-red-admin hash-pw' to create pw hash, marty
+  //       password: "$2a$08$MLbFBa8uhtcH3gGC4k0xruUfRtXh5YSBc/VOkxia7UG8Z/RN/kL5O",
+  //       permissions: "*"
+  //     },
+  //   ],
+  //   default: [
+  //     {
+  //       permissions: "read"
+  //     }
+  //   ]
+  // },
 
-  
 };
 
-RED.init(server,settings);
+RED.init(server, settings);
 
 
 // Serve the editor UI
-app.use(settings.httpAdminRoot,RED.httpAdmin);
+app.use(settings.httpAdminRoot, RED.httpAdmin);
 
 // Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,RED.httpNode);
+app.use(settings.httpNodeRoot, RED.httpNode);
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
-app.engine('handlebars', exphbs({extname: '.handlebars'}));
+app.engine('handlebars', exphbs({ extname: '.handlebars' }));
 app.set('view engine', 'handlebars');
 
 
@@ -92,13 +106,13 @@ app.use('/', indexRouter);
 // /api/health/readiness
 probe(app, {
   readinessURL: '/api/health/readiness',
-  readinessCallback: function(request, response){
-    winston.info ("readiness probe triggered")
+  readinessCallback: function (request, response) {
+    winston.info("readiness probe triggered")
     return response.end('ready')
   },
   livenessURL: '/api/health/liveness',
-  livenessCallback: function(request, response){
-    winston.info ("liveness probe triggered")
+  livenessCallback: function (request, response) {
+    winston.info("liveness probe triggered")
     return response.end('alive')
   },
 });
@@ -107,12 +121,12 @@ winston.info('Added kubernetes probes');
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -122,4 +136,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = {expressApp: app, RED: RED, server: server}
+module.exports = { expressApp: app, RED: RED, server: server }

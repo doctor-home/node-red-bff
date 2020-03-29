@@ -1,12 +1,5 @@
 [
     {
-        "id": "f150cfd5.8db36",
-        "type": "tab",
-        "label": "BFF API",
-        "disabled": false,
-        "info": "This is the \"backend-for-frontend\" API"
-    },
-    {
         "id": "e00d1491.279808",
         "type": "tab",
         "label": "Twilio Main Flow",
@@ -16,7 +9,7 @@
     {
         "id": "f31cb4b4.8fd488",
         "type": "tab",
-        "label": "Simple-flow",
+        "label": "Patient Dialog Flow",
         "disabled": false,
         "info": ""
     },
@@ -26,6 +19,27 @@
         "label": "Demo",
         "disabled": true,
         "info": ""
+    },
+    {
+        "id": "d2c6ecad.c01aa",
+        "type": "tab",
+        "label": "Store measurement in session",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "84dadbfd.fcdfd8",
+        "type": "tab",
+        "label": "Send results to backend",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "7bb718cc.14b568",
+        "type": "tab",
+        "label": "Call to Patient",
+        "disabled": false,
+        "info": "This flow exposes a POST endpoint to initiate an (outbound) call to a patient"
     },
     {
         "id": "78cca366.9ecd0c",
@@ -38,6 +52,7 @@
         "certname": "",
         "keyname": "",
         "caname": "",
+        "servername": "",
         "verifyservercert": false
     },
     {
@@ -89,7 +104,7 @@
         "wires": [
             [
                 "b2456487.891e28",
-                "5a31c189.7a2b1"
+                "9e04960d.d94388"
             ]
         ]
     },
@@ -128,8 +143,8 @@
         "func": "if (msg.payload.CallStatus == 'completed') {\n    var sessions = global.get(\"sessions\");\n    if (sessions) {\n        node.log(\"destroying session for \" + msg.payload.From);\n        delete sessions[msg.payload.CallSid];\n    }\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 285,
-        "y": 734,
+        "x": 520,
+        "y": 700,
         "wires": [
             [
                 "f6e8ca0f.cbc458"
@@ -141,8 +156,8 @@
         "type": "http response",
         "z": "e00d1491.279808",
         "name": "empty response",
-        "x": 667.5,
-        "y": 734,
+        "x": 920,
+        "y": 740,
         "wires": []
     },
     {
@@ -153,8 +168,8 @@
         "func": "msg.statusCode = 204;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 480.5,
-        "y": 734,
+        "x": 720,
+        "y": 740,
         "wires": [
             [
                 "ab3825ba.82feb8"
@@ -252,7 +267,8 @@
         "y": 99,
         "wires": [
             [
-                "338c2fb9.f0012"
+                "338c2fb9.f0012",
+                "b08e8e4.97c197"
             ]
         ]
     },
@@ -480,9 +496,12 @@
         "type": "debug",
         "z": "e00d1491.279808",
         "name": "",
-        "active": true,
-        "console": "false",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
         "complete": "true",
+        "targetType": "full",
         "x": 215.5,
         "y": 153,
         "wires": []
@@ -573,7 +592,8 @@
         "z": "e00d1491.279808",
         "name": "",
         "active": false,
-        "console": "false",
+        "tosidebar": true,
+        "console": false,
         "complete": "true",
         "x": 3040.5,
         "y": 135,
@@ -627,7 +647,7 @@
         "type": "debug",
         "z": "e00d1491.279808",
         "name": "recording status",
-        "active": true,
+        "active": false,
         "console": "false",
         "complete": "true",
         "x": 348,
@@ -3560,16 +3580,6 @@
         ]
     },
     {
-        "id": "b3c5a579.4d17c8",
-        "type": "comment",
-        "z": "f150cfd5.8db36",
-        "name": "Backend-for-Frontend (BFF) Test",
-        "info": "",
-        "x": 150,
-        "y": 60,
-        "wires": []
-    },
-    {
         "id": "9125244a.962b18",
         "type": "menu",
         "z": "f31cb4b4.8fd488",
@@ -3583,22 +3593,22 @@
                 "prependFor": false,
                 "content": "Are you John Doe ?",
                 "op": "say",
-                "action": "pressOrSay",
+                "action": "press",
                 "speech": "",
-                "route": "/measure"
+                "route": "/measure-oxy"
             },
             {
                 "key": "2",
                 "prependFor": false,
-                "content": "If you are not John Doe",
+                "content": "else",
                 "op": "say",
-                "action": "pressOrSay",
+                "action": "press",
                 "speech": "",
                 "route": "/delegation"
             }
         ],
-        "x": 780,
-        "y": 60,
+        "x": 800,
+        "y": 140,
         "wires": [
             [
                 "26d971bb.9ccfce"
@@ -3612,7 +3622,7 @@
         "name": "return to router",
         "statusCode": "",
         "headers": {},
-        "x": 1100,
+        "x": 1220,
         "y": 140,
         "wires": []
     },
@@ -3621,8 +3631,8 @@
         "type": "gather-end",
         "z": "f31cb4b4.8fd488",
         "name": "",
-        "x": 990,
-        "y": 60,
+        "x": 1010,
+        "y": 140,
         "wires": [
             [
                 "6a9dfc91.3eea14"
@@ -3638,8 +3648,8 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 68.5,
-        "y": 52,
+        "x": 88.5,
+        "y": 132,
         "wires": [
             [
                 "6bb855f8.fdbc4c"
@@ -3665,8 +3675,8 @@
         ],
         "checkall": "true",
         "outputs": 2,
-        "x": 222,
-        "y": 52,
+        "x": 242,
+        "y": 132,
         "wires": [
             [
                 "47569ea1.8989"
@@ -3691,8 +3701,8 @@
         "numDigits": "1",
         "speechHints": "",
         "speechTimeout": "auto",
-        "x": 590,
-        "y": 60,
+        "x": 610,
+        "y": 140,
         "wires": [
             [
                 "9125244a.962b18"
@@ -3706,8 +3716,8 @@
         "name": "welcome",
         "phrase": "Good day, this is your doctor@home check-in call. ",
         "voice": "man",
-        "x": 420,
-        "y": 20,
+        "x": 440,
+        "y": 100,
         "wires": [
             [
                 "aca778ec.e88388"
@@ -3727,7 +3737,7 @@
         "y": 220,
         "wires": [
             [
-                "a2b66167.31a7a"
+                "6abbd254.dca60c"
             ]
         ]
     },
@@ -3738,8 +3748,8 @@
         "name": "return to router",
         "statusCode": "",
         "headers": {},
-        "x": 1060,
-        "y": 300,
+        "x": 1120,
+        "y": 220,
         "wires": []
     },
     {
@@ -3753,11 +3763,11 @@
         "numDigits": "1",
         "speechHints": "",
         "speechTimeout": "auto",
-        "x": 330,
+        "x": 590,
         "y": 220,
         "wires": [
             [
-                "6abbd254.dca60c"
+                "bcbc9f43.73a31"
             ]
         ]
     },
@@ -3766,8 +3776,8 @@
         "type": "gather-end",
         "z": "f31cb4b4.8fd488",
         "name": "",
-        "x": 750,
-        "y": 300,
+        "x": 930,
+        "y": 220,
         "wires": [
             [
                 "9700494e.4701b8"
@@ -3781,47 +3791,11 @@
         "name": "are you authorized?",
         "phrase": "Are you authorized and can you answer questions about the health status of John Doe?",
         "voice": "man",
-        "x": 560,
+        "x": 340,
         "y": 220,
         "wires": [
             [
-                "d388d635.396d28"
-            ]
-        ]
-    },
-    {
-        "id": "d388d635.396d28",
-        "type": "menu",
-        "z": "f31cb4b4.8fd488",
-        "name": "",
-        "sayName": true,
-        "voice": "man",
-        "baseurl": "bcd6f241.db584",
-        "items": [
-            {
-                "key": "1",
-                "prependFor": true,
-                "content": "yes",
-                "op": "say",
-                "action": "press",
-                "speech": "",
-                "route": "/measure"
-            },
-            {
-                "key": "2",
-                "prependFor": true,
-                "content": "no",
-                "op": "say",
-                "action": "press",
-                "speech": "no",
-                "route": "/retry-later"
-            }
-        ],
-        "x": 770,
-        "y": 220,
-        "wires": [
-            [
-                "8a9c2a28.1d9bb8"
+                "a2b66167.31a7a"
             ]
         ]
     },
@@ -3829,16 +3803,16 @@
         "id": "1f3c19e8.b1bbe6",
         "type": "http in",
         "z": "f31cb4b4.8fd488",
-        "name": "/measure",
-        "url": "/measure",
+        "name": "/measure-oxy",
+        "url": "/measure-oxy",
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 100,
-        "y": 400,
+        "x": 90,
+        "y": 620,
         "wires": [
             [
-                "561e92ad.38d6ac"
+                "fd7cf377.0b912"
             ]
         ]
     },
@@ -3849,8 +3823,8 @@
         "name": "return to router",
         "statusCode": "",
         "headers": {},
-        "x": 1140,
-        "y": 400,
+        "x": 1360,
+        "y": 620,
         "wires": []
     },
     {
@@ -3863,7 +3837,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 100,
-        "y": 500,
+        "y": 340,
         "wires": [
             [
                 "42cfc861.6dc248"
@@ -3878,37 +3852,8 @@
         "statusCode": "",
         "headers": {},
         "x": 980,
-        "y": 500,
+        "y": 340,
         "wires": []
-    },
-    {
-        "id": "561e92ad.38d6ac",
-        "type": "say",
-        "z": "f31cb4b4.8fd488",
-        "name": "Please measure...",
-        "phrase": "Please measure your oxygen level now, using your pulse oximeter. When you are finished, please say “finished”",
-        "voice": "man",
-        "x": 330,
-        "y": 400,
-        "wires": [
-            [
-                "f780604d.fe5de"
-            ]
-        ]
-    },
-    {
-        "id": "f780604d.fe5de",
-        "type": "pause",
-        "z": "f31cb4b4.8fd488",
-        "name": "",
-        "seconds": "5",
-        "x": 570,
-        "y": 400,
-        "wires": [
-            [
-                "2023b647.7da48a"
-            ]
-        ]
     },
     {
         "id": "42cfc861.6dc248",
@@ -3918,7 +3863,7 @@
         "phrase": "This call will be ended now. We will retry in five minutes. Please make sure that John Doe or a person that is authorized to answer questions on the health status of John Doe will answer this call",
         "voice": "man",
         "x": 390,
-        "y": 500,
+        "y": 340,
         "wires": [
             [
                 "4156d624.0b6998"
@@ -3930,39 +3875,11 @@
         "type": "hangup",
         "z": "f31cb4b4.8fd488",
         "name": "",
-        "x": 640,
-        "y": 500,
+        "x": 660,
+        "y": 340,
         "wires": [
             [
                 "3532ff5.a59f4"
-            ]
-        ]
-    },
-    {
-        "id": "88433690.4e75c8",
-        "type": "hangup",
-        "z": "f31cb4b4.8fd488",
-        "name": "",
-        "x": 960,
-        "y": 400,
-        "wires": [
-            [
-                "1aaebd26.36a9a3"
-            ]
-        ]
-    },
-    {
-        "id": "2023b647.7da48a",
-        "type": "say",
-        "z": "f31cb4b4.8fd488",
-        "name": "Thanks, bye",
-        "phrase": "Thank you, bye.",
-        "voice": "man",
-        "x": 770,
-        "y": 400,
-        "wires": [
-            [
-                "88433690.4e75c8"
             ]
         ]
     },
@@ -3976,7 +3893,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 90,
-        "y": 640,
+        "y": 480,
         "wires": [
             [
                 "58b2a62e.09b3e8"
@@ -3991,7 +3908,7 @@
         "statusCode": "",
         "headers": {},
         "x": 940,
-        "y": 640,
+        "y": 480,
         "wires": []
     },
     {
@@ -4000,7 +3917,7 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "x": 620,
-        "y": 640,
+        "y": 480,
         "wires": [
             [
                 "9d101e7.58af0e"
@@ -4012,13 +3929,15 @@
         "type": "say",
         "z": "f31cb4b4.8fd488",
         "name": "Goodbye",
-        "phrase": "Goodbye",
+        "phrase": "Thank you. Talk to you soon.",
         "voice": "man",
         "x": 340,
-        "y": 640,
+        "y": 480,
         "wires": [
             [
-                "ebe009f4.cbafe8"
+                "ebe009f4.cbafe8",
+                "2bfa258e.cefc5a",
+                "49124703.8225f8"
             ]
         ]
     },
@@ -4030,6 +3949,1054 @@
         "info": "",
         "x": 450,
         "y": 40,
+        "wires": []
+    },
+    {
+        "id": "fd7b29dd.02ba38",
+        "type": "http request",
+        "z": "7bb718cc.14b568",
+        "name": "Twilio API: Create Call",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "https://api.twilio.com/2010-04-01/Accounts/ACd784239b067bc69e24a3837e90519006/Calls.json",
+        "tls": "78cca366.9ecd0c",
+        "persist": false,
+        "proxy": "",
+        "authType": "basic",
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "f2d23941.2b47f8",
+                "f83671f1.0f3ae"
+            ]
+        ]
+    },
+    {
+        "id": "f2d23941.2b47f8",
+        "type": "http response",
+        "z": "7bb718cc.14b568",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "f83671f1.0f3ae",
+        "type": "debug",
+        "z": "7bb718cc.14b568",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 650,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "89e4c7bf.feaf48",
+        "type": "function",
+        "z": "7bb718cc.14b568",
+        "name": "prepare request",
+        "func": "var from = msg.payload['from'] || '+1 404 666 8654'\nvar to = msg.payload['to'] || '+41793421239' // \nvar redirect_to = msg.payload['redirect_to'] || 'http://doctor-at-home-bff.eastus.azurecontainer.io:8080/router';\n\n// construct Call API payload\nmsg.payload = {\n    \"Twiml\": \"<Response><Redirect>\"+redirect_to+\"</Redirect></Response>\",\n    \"From\" : from,\n    \"To\": to,\n};\n\n// API wants payload as form encoded (not json body)\nmsg.headers= {}\nmsg.headers[\"content-type\"] = \"application/x-www-form-urlencoded\"\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 180,
+        "wires": [
+            [
+                "fd7b29dd.02ba38"
+            ]
+        ]
+    },
+    {
+        "id": "f7863453.14d6f8",
+        "type": "http in",
+        "z": "7bb718cc.14b568",
+        "name": "",
+        "url": "/outbound-call",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "89e4c7bf.feaf48"
+            ]
+        ]
+    },
+    {
+        "id": "bcbc9f43.73a31",
+        "type": "menu",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "sayName": false,
+        "voice": "man",
+        "baseurl": "bcd6f241.db584",
+        "items": [
+            {
+                "key": "1",
+                "prependFor": false,
+                "content": "yes",
+                "op": "say",
+                "action": "press",
+                "speech": "",
+                "route": "/measure-oxy"
+            },
+            {
+                "key": "2",
+                "prependFor": false,
+                "content": "no",
+                "op": "say",
+                "action": "press",
+                "speech": "",
+                "route": "/retry-later"
+            }
+        ],
+        "x": 750,
+        "y": 220,
+        "wires": [
+            [
+                "8a9c2a28.1d9bb8"
+            ]
+        ]
+    },
+    {
+        "id": "1efb98a6.92bb87",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "Start: Welcome and confirm Patient by name",
+        "info": "",
+        "x": 210,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2c710e35.0d61e2",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "Not patient: Ask about authorization",
+        "info": "",
+        "x": 180,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c6332e7f.d8aab",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "\"We will call again later, bye\"",
+        "info": "",
+        "x": 160,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6f0e6940.e8d358",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "End Conversation",
+        "info": "",
+        "x": 130,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "2bfa258e.cefc5a",
+        "type": "debug",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 670,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "1b603f12.31d3b1",
+        "type": "http in",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-pulse",
+        "url": "/measure-pulse",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 720,
+        "wires": [
+            [
+                "9a2f2c42.18444"
+            ]
+        ]
+    },
+    {
+        "id": "cb510380.3ba1c",
+        "type": "http response",
+        "z": "f31cb4b4.8fd488",
+        "name": "return to router",
+        "statusCode": "",
+        "headers": {},
+        "x": 1360,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "cce10e6d.612e7",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "next: /measure-pulse",
+        "route": "/measure-pulse",
+        "x": 1160,
+        "y": 620,
+        "wires": [
+            [
+                "1aaebd26.36a9a3"
+            ]
+        ]
+    },
+    {
+        "id": "afbb99ca.d55948",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "next: /measure-temp",
+        "route": "/measure-temp",
+        "x": 1160,
+        "y": 720,
+        "wires": [
+            [
+                "cb510380.3ba1c"
+            ]
+        ]
+    },
+    {
+        "id": "870472b5.8e423",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "Take measurements (oxi, pulse)",
+        "info": "",
+        "x": 150,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "fd7cf377.0b912",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "dtmf speech",
+        "timeout": "10",
+        "numDigits": "3",
+        "speechHints": "ninety hundred one two three four five six seven eight nine percent",
+        "speechTimeout": "",
+        "x": 270,
+        "y": 620,
+        "wires": [
+            [
+                "65fd80b5.33ee1"
+            ]
+        ]
+    },
+    {
+        "id": "65fd80b5.33ee1",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "Enter oxy level",
+        "phrase": "Please tell us your blood oxygen level now. For example 98%.",
+        "voice": "man",
+        "x": 460,
+        "y": 620,
+        "wires": [
+            [
+                "e0349993.d54048"
+            ]
+        ]
+    },
+    {
+        "id": "e0349993.d54048",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 670,
+        "y": 620,
+        "wires": [
+            [
+                "bf486111.0a78a"
+            ]
+        ]
+    },
+    {
+        "id": "9a2f2c42.18444",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "dtmf",
+        "timeout": "5",
+        "numDigits": "3",
+        "speechHints": "",
+        "speechTimeout": "auto",
+        "x": 290,
+        "y": 720,
+        "wires": [
+            [
+                "fd65385e.571b18"
+            ]
+        ]
+    },
+    {
+        "id": "fd65385e.571b18",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "Enter pulse",
+        "phrase": "Please measure and tell us your pulse rate now. For example 65",
+        "voice": "man",
+        "x": 470,
+        "y": 720,
+        "wires": [
+            [
+                "786ad2cd.011b2c"
+            ]
+        ]
+    },
+    {
+        "id": "786ad2cd.011b2c",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 670,
+        "y": 720,
+        "wires": [
+            [
+                "aeda6e60.b1c55"
+            ]
+        ]
+    },
+    {
+        "id": "d2406588.be6978",
+        "type": "http in",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-temp",
+        "url": "/measure-temp",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 800,
+        "wires": [
+            [
+                "4480a078.6cb42"
+            ]
+        ]
+    },
+    {
+        "id": "9ef396d9.d0e3c8",
+        "type": "http response",
+        "z": "f31cb4b4.8fd488",
+        "name": "return to router",
+        "statusCode": "",
+        "headers": {},
+        "x": 1400,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "e1ab935a.4ee15",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "next: /measure-resp-rate",
+        "route": "/measure-resp-rate",
+        "x": 1170,
+        "y": 800,
+        "wires": [
+            [
+                "9ef396d9.d0e3c8"
+            ]
+        ]
+    },
+    {
+        "id": "4480a078.6cb42",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "dtmf",
+        "timeout": "5",
+        "numDigits": "3",
+        "speechHints": "",
+        "speechTimeout": "auto",
+        "x": 290,
+        "y": 800,
+        "wires": [
+            [
+                "5e7043f7.57d46c"
+            ]
+        ]
+    },
+    {
+        "id": "5e7043f7.57d46c",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "Enter temperature",
+        "phrase": "Please measure your body temperature. For example 38.6",
+        "voice": "man",
+        "x": 490,
+        "y": 800,
+        "wires": [
+            [
+                "90f02514.70a7c8"
+            ]
+        ]
+    },
+    {
+        "id": "90f02514.70a7c8",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 670,
+        "y": 800,
+        "wires": [
+            [
+                "5ead8de5.981f84"
+            ]
+        ]
+    },
+    {
+        "id": "8ea2519.e57cdb",
+        "type": "comment",
+        "z": "f31cb4b4.8fd488",
+        "name": "Select next step",
+        "info": "",
+        "x": 1140,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "fe2815ee.364058",
+        "type": "http in",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-resp-rate",
+        "url": "/measure-resp-rate",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 900,
+        "wires": [
+            [
+                "757684bc.92095c"
+            ]
+        ]
+    },
+    {
+        "id": "92b11b76.9a9ae8",
+        "type": "http response",
+        "z": "f31cb4b4.8fd488",
+        "name": "return to router",
+        "statusCode": "",
+        "headers": {},
+        "x": 1380,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "b9c435ab.005678",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "next: /measure-status",
+        "route": "/measure-status",
+        "x": 1180,
+        "y": 900,
+        "wires": [
+            [
+                "92b11b76.9a9ae8"
+            ]
+        ]
+    },
+    {
+        "id": "757684bc.92095c",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "dtmf",
+        "timeout": "5",
+        "numDigits": "2",
+        "speechHints": "",
+        "speechTimeout": "auto",
+        "x": 290,
+        "y": 900,
+        "wires": [
+            [
+                "282d61ca.173fce"
+            ]
+        ]
+    },
+    {
+        "id": "282d61ca.173fce",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "Enter respiration rate",
+        "phrase": "Please measure your respiratory rate now. To do so, please start counting silently every breath you take when you hear the beep sound, until you hear the beep sound again after 15 seconds.",
+        "voice": "man",
+        "x": 500,
+        "y": 900,
+        "wires": [
+            [
+                "45935a32.4b9064"
+            ]
+        ]
+    },
+    {
+        "id": "45935a32.4b9064",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 690,
+        "y": 900,
+        "wires": [
+            [
+                "52672944.cefea8"
+            ]
+        ]
+    },
+    {
+        "id": "aa57eae1.a77108",
+        "type": "http in",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-status",
+        "url": "/measure-status",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 980,
+        "wires": [
+            [
+                "73683c0d.294214"
+            ]
+        ]
+    },
+    {
+        "id": "9e2d6e30.a583",
+        "type": "http response",
+        "z": "f31cb4b4.8fd488",
+        "name": "return to router",
+        "statusCode": "",
+        "headers": {},
+        "x": 1380,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "eb0b3dbe.f83ba",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-additional",
+        "route": "/measure-additional",
+        "x": 1160,
+        "y": 980,
+        "wires": [
+            [
+                "9e2d6e30.a583"
+            ]
+        ]
+    },
+    {
+        "id": "73683c0d.294214",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "dtmf",
+        "timeout": "5",
+        "numDigits": "2",
+        "speechHints": "one two three four five six seven eight nine ten",
+        "speechTimeout": "auto",
+        "x": 290,
+        "y": 980,
+        "wires": [
+            [
+                "58311b81.4c7b14"
+            ]
+        ]
+    },
+    {
+        "id": "58311b81.4c7b14",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "general health status",
+        "phrase": "Please rate your general health status on a scale from 1 to 10, where 1 is a very poor health status and 10 is a very good health status.",
+        "voice": "man",
+        "x": 500,
+        "y": 980,
+        "wires": [
+            [
+                "c7985fd9.bb437"
+            ]
+        ]
+    },
+    {
+        "id": "c7985fd9.bb437",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 690,
+        "y": 980,
+        "wires": [
+            [
+                "e11927db.c5f0e8"
+            ]
+        ]
+    },
+    {
+        "id": "556fff13.9b7f8",
+        "type": "http in",
+        "z": "f31cb4b4.8fd488",
+        "name": "/measure-additional",
+        "url": "/measure-additional",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 1060,
+        "wires": [
+            [
+                "39754050.9e0ef"
+            ]
+        ]
+    },
+    {
+        "id": "55eb7927.3741f8",
+        "type": "http response",
+        "z": "f31cb4b4.8fd488",
+        "name": "return to router",
+        "statusCode": "",
+        "headers": {},
+        "x": 1380,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "4b75f429.dc075c",
+        "type": "set-route",
+        "z": "f31cb4b4.8fd488",
+        "name": "next: /end",
+        "route": "/end",
+        "x": 1120,
+        "y": 1060,
+        "wires": [
+            [
+                "55eb7927.3741f8"
+            ]
+        ]
+    },
+    {
+        "id": "39754050.9e0ef",
+        "type": "gather-begin",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "action": "/router",
+        "input": "speech",
+        "timeout": "10",
+        "numDigits": "1",
+        "speechHints": "",
+        "speechTimeout": "auto",
+        "x": 290,
+        "y": 1060,
+        "wires": [
+            [
+                "840483ec.84188"
+            ]
+        ]
+    },
+    {
+        "id": "840483ec.84188",
+        "type": "say",
+        "z": "f31cb4b4.8fd488",
+        "name": "Anything else?",
+        "phrase": "Is there anything else you want to let us know about your current health status?",
+        "voice": "man",
+        "x": 480,
+        "y": 1060,
+        "wires": [
+            [
+                "103ccf5b.8a67f1"
+            ]
+        ]
+    },
+    {
+        "id": "103ccf5b.8a67f1",
+        "type": "gather-end",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "x": 690,
+        "y": 1060,
+        "wires": [
+            [
+                "acf0423f.6f3a"
+            ]
+        ]
+    },
+    {
+        "id": "67dac4e0.c608bc",
+        "type": "link in",
+        "z": "d2c6ecad.c01aa",
+        "name": "store measurement",
+        "links": [
+            "9ea5dbda.3e8fe8",
+            "b08e8e4.97c197"
+        ],
+        "x": 395,
+        "y": 180,
+        "wires": [
+            [
+                "fa5d5f88.ba0d3"
+            ]
+        ]
+    },
+    {
+        "id": "fa5d5f88.ba0d3",
+        "type": "function",
+        "z": "d2c6ecad.c01aa",
+        "name": "store measurement in session",
+        "func": "var key = msg.session.next_measurement;\n\nif (key){\n    delete msg.session.next_measurement; // clear the key\n    \n    var value = msg.payload.Digits;\n    if (!msg.session.measurements){\n        msg.session.measurements = {};\n    }\n    msg.session.measurements[key] = value\n    global.get(\"sessions\")[msg.payload.CallSid] = msg.session;\n    \n    node.warn ('Stored measurement for: ' + key + ' : ' + value);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 620,
+        "y": 300,
+        "wires": [
+            [
+                "cd17d0f5.7ea55"
+            ]
+        ]
+    },
+    {
+        "id": "cd17d0f5.7ea55",
+        "type": "debug",
+        "z": "d2c6ecad.c01aa",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 930,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "bf486111.0a78a",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'oxygen_level'",
+        "func": "\nmsg.session.next_measurement = 'oxygen_level';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 620,
+        "wires": [
+            [
+                "cce10e6d.612e7"
+            ]
+        ]
+    },
+    {
+        "id": "b08e8e4.97c197",
+        "type": "link out",
+        "z": "e00d1491.279808",
+        "name": "store measurement",
+        "links": [
+            "67dac4e0.c608bc"
+        ],
+        "x": 660,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c5182613.6bed98",
+        "type": "comment",
+        "z": "d2c6ecad.c01aa",
+        "name": "msg.session.next_measurement must contain a key",
+        "info": "",
+        "x": 710,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "aeda6e60.b1c55",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'pulse'",
+        "func": "\nmsg.session.next_measurement = 'pulse';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 720,
+        "wires": [
+            [
+                "afbb99ca.d55948"
+            ]
+        ]
+    },
+    {
+        "id": "5ead8de5.981f84",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'temperature'",
+        "func": "\nmsg.session.next_measurement = 'temperature';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 880,
+        "y": 800,
+        "wires": [
+            [
+                "e1ab935a.4ee15"
+            ]
+        ]
+    },
+    {
+        "id": "52672944.cefea8",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'respiratory_rate'",
+        "func": "\nmsg.session.next_measurement = 'respiratory_rate';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 900,
+        "wires": [
+            [
+                "b9c435ab.005678"
+            ]
+        ]
+    },
+    {
+        "id": "e11927db.c5f0e8",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'health_status'",
+        "func": "\nmsg.session.next_measurement = 'health_status';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 980,
+        "wires": [
+            [
+                "eb0b3dbe.f83ba"
+            ]
+        ]
+    },
+    {
+        "id": "acf0423f.6f3a",
+        "type": "function",
+        "z": "f31cb4b4.8fd488",
+        "name": "'comments'",
+        "func": "\nmsg.session.next_measurement = 'comments';\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 1060,
+        "wires": [
+            [
+                "4b75f429.dc075c"
+            ]
+        ]
+    },
+    {
+        "id": "32c3f5cb.d9eeaa",
+        "type": "link in",
+        "z": "84dadbfd.fcdfd8",
+        "name": "send data to backend",
+        "links": [
+            "6bb882be.c0a92c",
+            "2f194047.be588",
+            "49124703.8225f8"
+        ],
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "5434a47a.440c9c"
+            ]
+        ]
+    },
+    {
+        "id": "5434a47a.440c9c",
+        "type": "function",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "func": "var session = global.get(\"sessions\")[msg.payload.CallSid];\n\nvar result = {}\n\nresult.measurements = session.measurements;\nresult.patientPhone = msg.payload.Called;\nresult.patientCountry = msg.payload.CalledCountry;\nresult.callID = msg.payload.CallSid;\n\nmsg.payload = result;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 200,
+        "wires": [
+            [
+                "e5f1ded.9b0ca2",
+                "b2aa28ba.fce278"
+            ]
+        ]
+    },
+    {
+        "id": "ac3f705b.07b0f",
+        "type": "debug",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1190,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e5f1ded.9b0ca2",
+        "type": "http request",
+        "z": "84dadbfd.fcdfd8",
+        "name": "POST data to backend",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "http://doctor-at-home-bff.eastus.azurecontainer.io:8080/echo",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 960,
+        "y": 200,
+        "wires": [
+            [
+                "ac3f705b.07b0f"
+            ]
+        ]
+    },
+    {
+        "id": "9e04960d.d94388",
+        "type": "switch",
+        "z": "e00d1491.279808",
+        "name": "",
+        "property": "payload.CallStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "completed",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 740,
+        "wires": [
+            [
+                "5a31c189.7a2b1",
+                "2f194047.be588"
+            ],
+            [
+                "f6e8ca0f.cbc458"
+            ]
+        ]
+    },
+    {
+        "id": "2f194047.be588",
+        "type": "link out",
+        "z": "e00d1491.279808",
+        "name": "",
+        "links": [
+            "32c3f5cb.d9eeaa"
+        ],
+        "x": 455,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "49124703.8225f8",
+        "type": "link out",
+        "z": "f31cb4b4.8fd488",
+        "name": "",
+        "links": [
+            "32c3f5cb.d9eeaa"
+        ],
+        "x": 480,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "796a14c0.3cbfcc",
+        "type": "http in",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "url": "/echo",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 400,
+        "wires": [
+            [
+                "1950c1d9.e9313e",
+                "e2a60af4.b627e8"
+            ]
+        ]
+    },
+    {
+        "id": "1950c1d9.e9313e",
+        "type": "debug",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 810,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e2a60af4.b627e8",
+        "type": "http response",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 990,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b2aa28ba.fce278",
+        "type": "debug",
+        "z": "84dadbfd.fcdfd8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 890,
+        "y": 260,
         "wires": []
     }
 ]

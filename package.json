@@ -1,6 +1,6 @@
 {
-  "name": "node-red-service",
-  "description": "Low-code, event-driven microservices using Node-Red",
+  "name": "dah-node-red-flow",
+  "description": "Doctor@Home - Twilio IVR Control flow with node-red",
   "version": "0.1.0",
   "author": "Florian Georg",
   "license": "MIT",
@@ -26,7 +26,6 @@
     "morgan": "^1.10.0",
     "node-red": "^1.0.4",
     "node-red-contrib-twilio-ivr": "0.0.3",
-    "node-red-embedded-start": "^1.0.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
