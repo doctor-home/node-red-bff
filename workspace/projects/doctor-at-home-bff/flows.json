@@ -1,23 +1,9 @@
 [
     {
-        "id": "e00d1491.279808",
-        "type": "tab",
-        "label": "Twilio Main Flow",
-        "disabled": false,
-        "info": ""
-    },
-    {
         "id": "f31cb4b4.8fd488",
         "type": "tab",
         "label": "Patient Dialog Flow",
         "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "f6427bfd.100058",
-        "type": "tab",
-        "label": "Demo",
-        "disabled": true,
         "info": ""
     },
     {
@@ -40,6 +26,20 @@
         "label": "Call to Patient",
         "disabled": false,
         "info": "This flow exposes a POST endpoint to initiate an (outbound) call to a patient"
+    },
+    {
+        "id": "e00d1491.279808",
+        "type": "tab",
+        "label": "Twilio Main Flow",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f6427bfd.100058",
+        "type": "tab",
+        "label": "Demo",
+        "disabled": true,
+        "info": ""
     },
     {
         "id": "78cca366.9ecd0c",
@@ -250,7 +250,6 @@
         "y": 98,
         "wires": [
             [
-                "ad0a0f99.611c3",
                 "6038d748.5f3f88"
             ]
         ]
@@ -455,14 +454,15 @@
         "type": "function",
         "z": "e00d1491.279808",
         "name": "get session",
-        "func": "if (!global.get(\"sessions\")) {\n    // no global set of sessions yet.\n    global.set(\"sessions\", {});\n} else {\n    // try to find session for caller\n    msg.session = global.get(\"sessions\")[msg.payload.CallSid];\n}\nif (!msg.session) {\n    // no session for this call yet\n    var protocol = \"http://\";\n    if (msg.req.connection.encrypted === true) {\n        protocol = \"https://\";\n    }\n    msg.session = {\n        callStart: new Date(),\n        baseUrl: protocol + msg.req.headers.host\n    };\n    global.get(\"sessions\")[msg.payload.CallSid] = msg.session;\n    node.log(\"creating session for \" + msg.payload.From);\n    //node.log(JSON.stringify(global.get(\"sessions\")[msg.payload.CallSid]));\n\n    msg.session.nextRoute = \"/begin\";\n    msg.session.newCall = true;\n}\n\nreturn msg;",
+        "func": "if (!global.get(\"sessions\")) {\n    // no global set of sessions yet.\n    global.set(\"sessions\", {});\n} else {\n    // try to find session for caller\n    msg.session = global.get(\"sessions\")[msg.payload.CallSid];\n}\nif (!msg.session) {\n    // no session for this call yet\n    var protocol = \"http://\";\n    if (msg.req.connection.encrypted === true) {\n        protocol = \"https://\";\n    }\n    // this carries over info from the outbound-call initiation\n    var callInfo = global.get(\"call-info\")[msg.payload.CallSid];\n\n    msg.session = {\n        callStart: new Date(),\n        baseUrl: protocol + msg.req.headers.host,\n        callInfo: callInfo\n    };\n    global.get(\"sessions\")[msg.payload.CallSid] = msg.session;\n    node.log(\"creating session for \" + msg.payload.From);\n    //node.log(JSON.stringify(global.get(\"sessions\")[msg.payload.CallSid]));\n\n    msg.session.nextRoute = \"/begin\";\n    msg.session.newCall = true;\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 240,
         "y": 99,
         "wires": [
             [
-                "8f664274.7cf8c"
+                "8f664274.7cf8c",
+                "ad0a0f99.611c3"
             ]
         ]
     },
@@ -502,8 +502,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
-        "x": 215.5,
-        "y": 153,
+        "x": 390,
+        "y": 180,
         "wires": []
     },
     {
@@ -3968,8 +3968,7 @@
         "y": 180,
         "wires": [
             [
-                "f2d23941.2b47f8",
-                "f83671f1.0f3ae"
+                "7d7dae25.f80de"
             ]
         ]
     },
@@ -3980,7 +3979,7 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 710,
+        "x": 990,
         "y": 180,
         "wires": []
     },
@@ -3993,9 +3992,10 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
-        "x": 650,
-        "y": 260,
+        "complete": "true",
+        "targetType": "full",
+        "x": 850,
+        "y": 300,
         "wires": []
     },
     {
@@ -4003,7 +4003,7 @@
         "type": "function",
         "z": "7bb718cc.14b568",
         "name": "prepare request",
-        "func": "var from = msg.payload['from'] || '+1 404 666 8654'\nvar to = msg.payload['to'] || '+41793421239' // \nvar redirect_to = msg.payload['redirect_to'] || 'http://doctor-at-home-bff.eastus.azurecontainer.io:8080/router';\n\n// construct Call API payload\nmsg.payload = {\n    \"Twiml\": \"<Response><Redirect>\"+redirect_to+\"</Redirect></Response>\",\n    \"From\" : from,\n    \"To\": to,\n};\n\n// API wants payload as form encoded (not json body)\nmsg.headers= {}\nmsg.headers[\"content-type\"] = \"application/x-www-form-urlencoded\"\n\n\nreturn msg;",
+        "func": "var from = msg.payload['from'] // '+1 404 666 8654'\nvar to = msg.payload['to'] // '+41 79 342 123 9'\n\n\n// needs to be stored in session, once we have a SID\nflow.set ('callInfo', {\n    patientID: msg.payload['patientID'],\n    webhook: msg.payload['webhook']\n})\n\nvar redirect_to = msg.payload['redirect_to'] || 'http://doctor-at-home-bff.eastus.azurecontainer.io:8080/router';\n\n\n\n// construct Call API payload\nmsg.payload = {\n    \"Twiml\": \"<Response><Redirect>\"+redirect_to+\"</Redirect></Response>\",\n    \"From\" : from,\n    \"To\": to,\n};\n\n\n\n\n// API wants payload as form encoded (not json body)\nmsg.headers= {}\nmsg.headers[\"content-type\"] = \"application/x-www-form-urlencoded\"\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 240,
@@ -4027,7 +4027,8 @@
         "y": 100,
         "wires": [
             [
-                "89e4c7bf.feaf48"
+                "89e4c7bf.feaf48",
+                "83591c5b.f38c1"
             ]
         ]
     },
@@ -4212,7 +4213,7 @@
         "type": "say",
         "z": "f31cb4b4.8fd488",
         "name": "Enter oxy level",
-        "phrase": "Please tell us your blood oxygen level now. For example 98%.",
+        "phrase": "Please tell me your blood oxygen level now. For example 98%.",
         "voice": "man",
         "x": 460,
         "y": 620,
@@ -4241,7 +4242,7 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "action": "/router",
-        "input": "dtmf",
+        "input": "dtmf speech",
         "timeout": "5",
         "numDigits": "3",
         "speechHints": "",
@@ -4259,7 +4260,7 @@
         "type": "say",
         "z": "f31cb4b4.8fd488",
         "name": "Enter pulse",
-        "phrase": "Please measure and tell us your pulse rate now. For example 65",
+        "phrase": "Please tell me your pulse rate now.",
         "voice": "man",
         "x": 470,
         "y": 720,
@@ -4330,10 +4331,10 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "action": "/router",
-        "input": "dtmf",
-        "timeout": "5",
+        "input": "dtmf speech",
+        "timeout": "10",
         "numDigits": "3",
-        "speechHints": "",
+        "speechHints": "thirty fourty one two three four five six seven eight nine ten",
         "speechTimeout": "auto",
         "x": 290,
         "y": 800,
@@ -4413,9 +4414,9 @@
         "id": "b9c435ab.005678",
         "type": "set-route",
         "z": "f31cb4b4.8fd488",
-        "name": "next: /measure-status",
-        "route": "/measure-status",
-        "x": 1180,
+        "name": "next: END",
+        "route": "/end",
+        "x": 1140,
         "y": 900,
         "wires": [
             [
@@ -4429,7 +4430,7 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "action": "/router",
-        "input": "dtmf",
+        "input": "dtmf speech",
         "timeout": "5",
         "numDigits": "2",
         "speechHints": "",
@@ -4447,13 +4448,13 @@
         "type": "say",
         "z": "f31cb4b4.8fd488",
         "name": "Enter respiration rate",
-        "phrase": "Please measure your respiratory rate now. To do so, please start counting silently every breath you take when you hear the beep sound, until you hear the beep sound again after 15 seconds.",
+        "phrase": "Please measure your respiratory rate now. To do so, please start counting silently every breath you take after the beep. Count until you hear thesecond beep after after 15 seconds.",
         "voice": "man",
         "x": 500,
         "y": 900,
         "wires": [
             [
-                "45935a32.4b9064"
+                "533174a3.6b1eec"
             ]
         ]
     },
@@ -4462,7 +4463,7 @@
         "type": "gather-end",
         "z": "f31cb4b4.8fd488",
         "name": "",
-        "x": 690,
+        "x": 730,
         "y": 900,
         "wires": [
             [
@@ -4480,7 +4481,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 100,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "73683c0d.294214"
@@ -4495,7 +4496,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1380,
-        "y": 980,
+        "y": 1200,
         "wires": []
     },
     {
@@ -4505,7 +4506,7 @@
         "name": "/measure-additional",
         "route": "/measure-additional",
         "x": 1160,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "9e2d6e30.a583"
@@ -4524,7 +4525,7 @@
         "speechHints": "one two three four five six seven eight nine ten",
         "speechTimeout": "auto",
         "x": 290,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "58311b81.4c7b14"
@@ -4539,7 +4540,7 @@
         "phrase": "Please rate your general health status on a scale from 1 to 10, where 1 is a very poor health status and 10 is a very good health status.",
         "voice": "man",
         "x": 500,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "c7985fd9.bb437"
@@ -4552,7 +4553,7 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "x": 690,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "e11927db.c5f0e8"
@@ -4569,7 +4570,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 110,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "39754050.9e0ef"
@@ -4584,7 +4585,7 @@
         "statusCode": "",
         "headers": {},
         "x": 1380,
-        "y": 1060,
+        "y": 1280,
         "wires": []
     },
     {
@@ -4594,7 +4595,7 @@
         "name": "next: /end",
         "route": "/end",
         "x": 1120,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "55eb7927.3741f8"
@@ -4613,7 +4614,7 @@
         "speechHints": "",
         "speechTimeout": "auto",
         "x": 290,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "840483ec.84188"
@@ -4628,7 +4629,7 @@
         "phrase": "Is there anything else you want to let us know about your current health status?",
         "voice": "man",
         "x": 480,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "103ccf5b.8a67f1"
@@ -4641,7 +4642,7 @@
         "z": "f31cb4b4.8fd488",
         "name": "",
         "x": 690,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "acf0423f.6f3a"
@@ -4758,7 +4759,7 @@
         "func": "\nmsg.session.next_measurement = 'temperature';\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
-        "x": 880,
+        "x": 900,
         "y": 800,
         "wires": [
             [
@@ -4791,7 +4792,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 900,
-        "y": 980,
+        "y": 1200,
         "wires": [
             [
                 "eb0b3dbe.f83ba"
@@ -4807,7 +4808,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 910,
-        "y": 1060,
+        "y": 1280,
         "wires": [
             [
                 "4b75f429.dc075c"
@@ -4836,11 +4837,11 @@
         "id": "5434a47a.440c9c",
         "type": "function",
         "z": "84dadbfd.fcdfd8",
-        "name": "",
-        "func": "var session = global.get(\"sessions\")[msg.payload.CallSid];\n\nvar result = {}\n\nresult.measurements = session.measurements;\nresult.patientPhone = msg.payload.Called;\nresult.patientCountry = msg.payload.CalledCountry;\nresult.callID = msg.payload.CallSid;\n\nmsg.payload = result;\n\n\nreturn msg;",
+        "name": "construct health-report request",
+        "func": "var session = global.get(\"sessions\")[msg.payload.CallSid];\n\nvar result = {\n    timestamp: new Date(),\n    healthReportID : null,\n    patientID : session.callInfo.patientID,\n    heartBeat: session.measurements.pulse,\n    oxygenation: session.measurements.oxygen_level,\n    temperature: session.measurements.temperature,\n    breathingRate: session.measurements.respiratory_rate,\n    ML_Triage: null,\n    //measurements : session.measurements,\n    //patientPhone : msg.payload.Called,\n    //patientCountry: msg.payload.CalledCountry,\n    //callID : msg.payload.CallSid,\n    //webhook : session.callInfo.webhook\n}\n\n\nmsg.payload = result;\nmsg.url = session.callInfo.webhook;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 700,
+        "x": 780,
         "y": 200,
         "wires": [
             [
@@ -4854,14 +4855,14 @@
         "type": "debug",
         "z": "84dadbfd.fcdfd8",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "x": 1190,
-        "y": 200,
+        "x": 1270,
+        "y": 140,
         "wires": []
     },
     {
@@ -4872,12 +4873,12 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": false,
-        "url": "http://doctor-at-home-bff.eastus.azurecontainer.io:8080/echo",
+        "url": "",
         "tls": "",
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 960,
+        "x": 1160,
         "y": 200,
         "wires": [
             [
@@ -4964,7 +4965,7 @@
         "type": "debug",
         "z": "84dadbfd.fcdfd8",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -4989,14 +4990,90 @@
         "type": "debug",
         "z": "84dadbfd.fcdfd8",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
-        "x": 890,
+        "x": 1050,
         "y": 260,
         "wires": []
+    },
+    {
+        "id": "83591c5b.f38c1",
+        "type": "debug",
+        "z": "7bb718cc.14b568",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 360,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "7d7dae25.f80de",
+        "type": "function",
+        "z": "7bb718cc.14b568",
+        "name": "store call-info under new sid",
+        "func": "if (!global.get(\"call-info\")){\n    global.set(\"call-info\", {})\n}\n// we need the new sid after the call has been created\n// FIXME this is probably not safe from race conditions\nglobal.get(\"call-info\")[msg.payload.sid] = flow.get('callInfo');\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 180,
+        "wires": [
+            [
+                "f2d23941.2b47f8",
+                "f83671f1.0f3ae"
+            ]
+        ]
+    },
+    {
+        "id": "533174a3.6b1eec",
+        "type": "play",
+        "z": "f31cb4b4.8fd488",
+        "baseurl": "bcd6f241.db584",
+        "name": "beep",
+        "url": "/beep.mp3",
+        "x": 420,
+        "y": 980,
+        "wires": [
+            [
+                "f114666f.5dc718"
+            ]
+        ]
+    },
+    {
+        "id": "f114666f.5dc718",
+        "type": "pause",
+        "z": "f31cb4b4.8fd488",
+        "name": "15s",
+        "seconds": "15",
+        "x": 570,
+        "y": 980,
+        "wires": [
+            [
+                "d97807fa.2d4c38"
+            ]
+        ]
+    },
+    {
+        "id": "d97807fa.2d4c38",
+        "type": "play",
+        "z": "f31cb4b4.8fd488",
+        "baseurl": "bcd6f241.db584",
+        "name": "beep",
+        "url": "/beep.mp3",
+        "x": 720,
+        "y": 980,
+        "wires": [
+            [
+                "45935a32.4b9064"
+            ]
+        ]
     }
 ]
