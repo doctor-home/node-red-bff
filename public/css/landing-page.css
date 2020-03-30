@@ -5,12 +5,23 @@
  */
 
 body {
-  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+  font-family: sofia-pro, sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
-h1,
+h1 { 
+  font-family: bookman-jf-pro,serif;
+  font-weight: 400;
+  font-style: normal;
+}
 h2,
-h3,
+h3 { 
+  font-family: bookman-jf-pro,serif;
+  font-weight: 400;
+  font-style: normal;
+},
 h4,
 h5,
 h6 {
@@ -20,22 +31,24 @@ h6 {
 
 header.masthead {
   position: relative;
-  background-color: #343a40;
-  background: url("../img/bg-masthead.jpg") no-repeat center center;
+  background-color: #2e4d9c;
+  background: url("../img/header_bkgd.png") no-repeat center center;
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
 
+/*
 header.masthead .overlay {
   position: absolute;
-  background-color: #212529;
+  background-color: #2e4d9c;
   height: 100%;
   width: 100%;
   top: 0;
   left: 0;
   opacity: 0.3;
 }
+*/
 
 header.masthead h1 {
   font-size: 2rem;
@@ -47,7 +60,7 @@ header.masthead h1 {
     padding-bottom: 12rem;
   }
   header.masthead h1 {
-    font-size: 3rem;
+    font-size: 5rem;
   }
 }
 
