@@ -12,7 +12,7 @@ Here's the documentation on how to configure the Twilio Voice IVR to make it wor
 https://flows.nodered.org/node/node-red-contrib-twilio-ivr
 
 
-## Step 1: Local Build
+## Local Build
  - As an NodeJS / express app:
  ```bash
 npm install
@@ -25,19 +25,10 @@ docker build . -t node-red-service
 docker run -p 8080:8080 node-red-service
 open http://0.0.0.0:8080/
 ```
+## Build and Deploy on Cloud
+This uses Github actions to deploy on Azure Web App Containers
 
-## Step 2: Push to Dockerhub
-See and run ```./tag_push_azure.sh```
-
-
-## Step 3: Deploy to Azure Container Instances (ACI)
-See and run ```./deploy_on_azure.sh```
-
-Afterwards, the Node-Red editor will run on:
-http://doctor-at-home-bff.eastus.azurecontainer.io:8080/editor/
-
-
-## Step 4: Understand what's happening
+## Understand what's happening
 There are multiple "flows" (Tabs) in the editor. 
 The one called "Twilio Main Flow" is controlling the basic routing of webhook requests. You should NOT be required to change anything here.
 The "simple-flow" is controlling the Voice menues and command of the user, this is what we are working on right now.
