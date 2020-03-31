@@ -9,7 +9,7 @@ jobs:
     # checkout the repo
     - name: 'Checkout Github Action' 
       #uses: actions/checkout@master
-      uses: actions/checkout@doctor_at_home_hackaton
+      uses: actions/checkout@master
     
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
