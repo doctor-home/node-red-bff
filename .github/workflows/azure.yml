@@ -8,7 +8,6 @@ jobs:
     steps:
     # checkout the repo
     - name: 'Checkout Github Action' 
-      #uses: actions/checkout@master
       uses: actions/checkout@master
     
     - name: 'Login via Azure CLI'
@@ -28,7 +27,7 @@ jobs:
       
     - uses: azure/webapps-container-deploy@v1
       with:
-        app-name: 'node-rnc'
+        app-name: 'doctor-at-home-bff'
         images: 'doctorathome.azurecr.io/doctor-at-home-bff:${{ github.sha }}'
     
     - name: Azure logout
