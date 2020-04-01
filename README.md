@@ -1,16 +1,14 @@
 # Doctor@Home - Node-Red BFF 
-Low-code, event-driven microservice using Node-Red (http://nodered.org)
+Low-code, event-driven microservice for Doctor@Home.
+This components leverages node-red for coordinating the frontend with backend components (storage backend and triage model).
+
+Some change
+
+![doctor_at_home_bff](https://github.com/doctor-home/node-red-bff/workflows/doctor_at_home_bff/badge.svg)
 
 
 ## Overview
-
-This is a Node.js app. It can be build using ``npm`` and Dockerfile.
-
-Here's the documentation on how to configure the Twilio Voice IVR to make it work.
-(It's basically registering the webhooks that the Node-Red flows will expose):
-
-https://flows.nodered.org/node/node-red-contrib-twilio-ivr
-
+This component decouples the backend components from the frontend. It also provides REST endpoints for the backend to initiate calls to the Twilio Voice APIs.
 
 ## Local Build
  - As an NodeJS / express app:
@@ -21,13 +19,13 @@ open http://0.0.0.0:8080/
  ```
  - Local build and run using Docker 
  ```bash
-docker build . -t node-red-service
-docker run -p 8080:8080 node-red-service
+docker build . -t node-red-bff
+docker run -p 8080:8080 node-red-bff
 open http://0.0.0.0:8080/
 ```
-## Build and Deploy on Cloud
+## Build and Deploy from Github to Azure Web App Containers
 This uses Github actions to deploy on Azure Web App Containers.
-See .github/workflows/azure.yml
+See .github/workflows/azure.yml 
 
 
 ## Understand what's happening
