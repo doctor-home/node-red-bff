@@ -26,7 +26,9 @@ docker run -p 8080:8080 node-red-service
 open http://0.0.0.0:8080/
 ```
 ## Build and Deploy on Cloud
-This uses Github actions to deploy on Azure Web App Containers
+This uses Github actions to deploy on Azure Web App Containers.
+See .github/workflows/azure.yml
+
 
 ## Understand what's happening
 There are multiple "flows" (Tabs) in the editor. 
