@@ -10,8 +10,11 @@
 # - Azure Container Registry
 #   doctorathome.azurecr.io
 
-on: [push]
-
+on: 
+  push:
+    branches:
+    - master
+    - doctor_at_home_hackathon
 
 name: doctor_at_home_bff
 
