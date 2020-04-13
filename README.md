@@ -1,18 +1,16 @@
 # Doctor@Home - Node-Red BFF 
-Low-code, event-driven microservice using Node-Red (http://nodered.org)
+Low-code, event-driven microservice for Doctor@Home.
+This components leverages node-red for coordinating the frontend with backend components (storage backend and triage model).
+
+Some change
+
+![doctor_at_home_bff](https://github.com/doctor-home/node-red-bff/workflows/doctor_at_home_bff/badge.svg)
 
 
 ## Overview
+This component decouples the backend components from the frontend. It also provides REST endpoints for the backend to initiate calls to the Twilio Voice APIs.
 
-This is a Node.js app. It can be build using ``npm`` and Dockerfile.
-
-Here's the documentation on how to configure the Twilio Voice IVR to make it work.
-(It's basically registering the webhooks that the Node-Red flows will expose):
-
-https://flows.nodered.org/node/node-red-contrib-twilio-ivr
-
-
-## Step 1: Local Build
+## Local Build
  - As an NodeJS / express app:
  ```bash
 npm install
@@ -21,23 +19,16 @@ open http://0.0.0.0:8080/
  ```
  - Local build and run using Docker 
  ```bash
-docker build . -t node-red-service
-docker run -p 8080:8080 node-red-service
+docker build . -t node-red-bff
+docker run -p 8080:8080 node-red-bff
 open http://0.0.0.0:8080/
 ```
-
-## Step 2: Push to Dockerhub
-See and run ```./tag_push_azure.sh```
-
-
-## Step 3: Deploy to Azure Container Instances (ACI)
-See and run ```./deploy_on_azure.sh```
-
-Afterwards, the Node-Red editor will run on:
-http://doctor-at-home-bff.eastus.azurecontainer.io:8080/editor/
+## Build and Deploy from Github to Azure Web App Containers
+This uses Github actions to deploy on Azure Web App Containers.
+See .github/workflows/azure.yml 
 
 
-## Step 4: Understand what's happening
+## Understand what's happening
 There are multiple "flows" (Tabs) in the editor. 
 The one called "Twilio Main Flow" is controlling the basic routing of webhook requests. You should NOT be required to change anything here.
 The "simple-flow" is controlling the Voice menues and command of the user, this is what we are working on right now.

@@ -11,6 +11,8 @@ EXPOSE 8080
 #instead of RUN npm install
 COPY package.json /tmp/package.json
 RUN cd /tmp && npm install
+# patch 
+COPY patch/red.js /tmp/node_modules/@node_red/editor-client/public/red/
 RUN mkdir -p /app && cp -a /tmp/node_modules /app/
 
 WORKDIR /app

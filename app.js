@@ -2,7 +2,10 @@
 
 var createError = require('http-errors');
 var express = require('express');
-var exphbs = require('express-handlebars');
+const handlebars = require('handlebars')
+const exphbs = require('express-handlebars');
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+ 
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -88,7 +91,10 @@ app.use(settings.httpNodeRoot, RED.httpNode);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
-app.engine('handlebars', exphbs({ extname: '.handlebars' }));
+app.engine('handlebars', exphbs({ 
+  handlebars: allowInsecurePrototypeAccess(handlebars),
+  extname: '.handlebars' 
+  }));
 app.set('view engine', 'handlebars');
 
 
