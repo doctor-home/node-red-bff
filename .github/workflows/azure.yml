@@ -14,7 +14,6 @@ on:
   push:
     branches:
     - master
-    - doctor_at_home_hackathon
 
 name: doctor_at_home_bff
 
@@ -22,9 +21,12 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    # checkout the repo
+    # checkout the repo, master branch
     - name: 'Checkout Github Action' 
       uses: actions/checkout@master
+      with:
+        ref: master
+
     # login to Azure 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
