@@ -152,7 +152,7 @@ RED.start().then((result) => {
   
   var os = RED.nodes.getContext().global.get('os')
 
-  winston.info ("Node red flows have been started on + http://0.0.0.0:" + port+"/editor");
+  winston.info ("Node red flows have been started on + http://localhost:" + port+"/editor");
 
   winston.info(RED.nodes.getFlows());
 

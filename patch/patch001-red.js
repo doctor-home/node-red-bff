@@ -1394,11 +1394,11 @@ RED.comms = (function() {
                 }
             }
         }
-
+        // PATCH001 'perMessageDeflate=false' should fix Websocket problems on Azure WebApp Container
         ws = new WebSocket(wspath, {
-            // PATCH for Azure
             perMessageDeflate: false
           });
+        // PATCH001 End
         ws.onopen = function() {
             reconnectAttempts = 0;
             if (errornotification) {
