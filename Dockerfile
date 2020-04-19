@@ -12,7 +12,7 @@ EXPOSE 8080
 COPY package.json /tmp/package.json
 RUN cd /tmp && npm install
 # patch, should fix problems with Azure Free Tier resources WebSocket support
-COPY patch/patch001-red.js /tmp/node_modules/@node_red/editor-client/public/red/red.min.js
+#COPY patch/patch001-red.js /tmp/node_modules/@node_red/editor-client/public/red/red.min.js
 RUN mkdir -p /app && cp -a /tmp/node_modules /app/
 
 WORKDIR /app
