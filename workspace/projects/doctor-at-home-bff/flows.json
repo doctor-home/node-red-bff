@@ -14,9 +14,9 @@
         "info": ""
     },
     {
-        "id": "fb0afa8b.2aa058",
+        "id": "f3501b4b.55c8b8",
         "type": "tab",
-        "label": "Twilio Status",
+        "label": "Twilio Calls",
         "disabled": false,
         "info": ""
     },
@@ -49,7 +49,76 @@
                 ]
             }
         ],
-        "env": [],
+        "env": [
+            {
+                "name": "BACKEND_API_ROOT",
+                "type": "str",
+                "value": "http://localhost:7777/api/dah"
+            },
+            {
+                "name": "BACKEND_USERNAME",
+                "type": "str",
+                "value": "default"
+            },
+            {
+                "name": "BACKEND_PASSWORD",
+                "type": "str",
+                "value": "doctor_at_home"
+            }
+        ],
+        "color": "#DDAA99"
+    },
+    {
+        "id": "c52863fb.9bc86",
+        "type": "subflow",
+        "name": "Twilio settings",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 50,
+                "y": 30,
+                "wires": [
+                    {
+                        "id": "c30c5fc2.72d36"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 560,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "c30c5fc2.72d36",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "TWILIO_ACCOUNT_SID",
+                "type": "str",
+                "value": "ACxxxxx"
+            },
+            {
+                "name": "TWILIO_AUTH_TOKEN",
+                "type": "str",
+                "value": "xxxx"
+            },
+            {
+                "name": "TWILIO_FLOW_ID",
+                "type": "str",
+                "value": "FWxxxxx"
+            },
+            {
+                "name": "TWILIO_OUTBOUND_NUMBER",
+                "type": "str",
+                "value": "+1 123 456 789"
+            }
+        ],
         "color": "#DDAA99"
     },
     {
@@ -190,8 +259,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
-        "x": 630,
-        "y": 160,
+        "x": 650,
+        "y": 40,
         "wires": []
     },
     {
@@ -293,8 +362,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 440,
-        "y": 240,
+        "x": 500,
+        "y": 100,
         "wires": [
             [
                 "d2950175.8471a",
@@ -311,8 +380,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 120,
-        "y": 300,
+        "x": 90,
+        "y": 100,
         "wires": [
             [
                 "c317bfca.eac96"
@@ -327,7 +396,7 @@
         "statusCode": "",
         "headers": {},
         "x": 690,
-        "y": 280,
+        "y": 100,
         "wires": []
     },
     {
@@ -335,7 +404,7 @@
         "type": "function",
         "z": "2d508562.6bf79a",
         "name": "prepare token request",
-        "func": "node.warn ('Refreshing JWT token...');\n\nvar settings = {\n    apiRoot: \"https://doctor-at-home-backend.azurewebsites.net/api/dah\",\n}\nmsg.settings = settings;\n\n\nmsg.payload = {\n    username: 'default',\n    password: 'doctor_at_home'\n}\nreturn msg;\n\n",
+        "func": "node.warn ('Refreshing JWT token...');\n\nvar settings = {\n    apiRoot: env.get(\"BACKEND_API_ROOT\"),\n    username: env.get(\"BACKEND_USERNAME\")\n}\n\n\nmsg.settings = settings;\n\n\nmsg.payload = {\n    username: env.get(\"BACKEND_USERNAME\"),\n    password: env.get(\"BACKEND_PASSWORD\")\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 380,
@@ -372,7 +441,7 @@
         "type": "function",
         "z": "2d508562.6bf79a",
         "name": "store token and set HTTP Auth header",
-        "func": "msg.backendToken = msg.payload.token;\n\n// next url\nmsg.headers = {}\nmsg.headers[\"Authorization\"] = \"Bearer \" + msg.backendToken;\n\n\nreturn msg;",
+        "func": "msg.backendToken = msg.payload.token;\n\n// clear and set Authorization Bearer token\nmsg.headers = {}\nmsg.headers[\"Authorization\"] = \"Bearer \" + msg.backendToken;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 530,
@@ -386,8 +455,25 @@
         "type": "subflow:2d508562.6bf79a",
         "z": "6696950a.39ce5c",
         "name": "",
-        "x": 320,
-        "y": 160,
+        "env": [
+            {
+                "name": "BACKEND_API_ROOT",
+                "value": "BACKEND_API_ROOT",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_USERNAME",
+                "value": "BACKEND_USERNAME",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_PASSWORD",
+                "value": "BACKEND_PASSWORD",
+                "type": "env"
+            }
+        ],
+        "x": 310,
+        "y": 100,
         "wires": [
             [
                 "b6bead00.71f2d"
@@ -422,5 +508,552 @@
                 "218eb139.ea35fe"
             ]
         ]
+    },
+    {
+        "id": "c30c5fc2.72d36",
+        "type": "function",
+        "z": "c52863fb.9bc86",
+        "name": "Twilio settings",
+        "func": "var twilio = {\n    accountSid: env.get('TWILIO_ACCOUNT_SID'),\n    authToken: env.get('TWILIO_AUTH_TOKEN'),\n    flowId: env.get('TWILIO_FLOW_ID'),\n    outboundNumber: env.get('TWILIO_OUTBOUND_NUMBER'),\n}\n\ntwilio.flowExecutionURL= \n    \"https://\"+twilio.accountSid+\":\"+twilio.authToken+\n    \"@studio.twilio.com/v1/Flows/\"+ twilio.flowId + \n    \"/Executions\";\n\n// store to the message object\nmsg.twilio = twilio;\n\n// Clear headers, set content type\n// (Twilio API expects form-urlencoded)\nmsg.headers = {}\nmsg.headers['content-type'] = \"application/x-www-form-urlencoded\"\n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 300,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e92b675.766af8",
+        "type": "http request",
+        "z": "c52863fb.9bc86",
+        "d": true,
+        "name": "Twilio Execution ",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 320,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5171119.bcacaf",
+        "type": "function",
+        "z": "c52863fb.9bc86",
+        "d": true,
+        "name": "",
+        "func": "//  patient will be passed as context parameters into twilio flow\nvar p = msg.payload[0]; // we only have a single patient\nmsg.patient  = {\n    id: p._id,\n    fullname: p.name,\n    language: p.language,\n    phone: \"+41 79 342 123 9\", //p.phone, FIXME: global switch to reroute all to test number\n    clinicianID: p.clinicianID,\n    age: p.age,\n    preconditions: p.preconditions,\n    under_observation: p.under_observation,\n    from: msg.payload.from || \"+1 717 727 2384\", // FIXME: global setting\n}\n\n\n\n// Twilio Execution Payload\n// https://www.twilio.com/docs/studio/rest-api/execution\nmsg.payload = {\n    From: msg.patient.from,\n    To: msg.patient.phone,\n    Parameters: JSON.stringify (msg.patient)\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 310,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "40e53c7.d3010c4",
+        "type": "debug",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 650,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1613f4e4.8e207b",
+        "type": "inject",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "topic": "",
+        "payload": "{\"_id\":\"09e6fb7f-9b57-4eb6-b1cb-de721e60889c\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 180,
+        "wires": [
+            [
+                "8a24ea53.6cf7c8"
+            ]
+        ]
+    },
+    {
+        "id": "497386b7.92dda8",
+        "type": "http request",
+        "z": "6696950a.39ce5c",
+        "name": "GET Patients",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "{{{settings.apiRoot}}}/v0/patients",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 490,
+        "y": 220,
+        "wires": [
+            [
+                "40e53c7.d3010c4",
+                "dde4d7d4.7b6cd8"
+            ]
+        ]
+    },
+    {
+        "id": "7ebbe244.38c37c",
+        "type": "http in",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "url": "/v1/patients",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 80,
+        "y": 220,
+        "wires": [
+            [
+                "8a24ea53.6cf7c8"
+            ]
+        ]
+    },
+    {
+        "id": "dde4d7d4.7b6cd8",
+        "type": "http response",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "8a24ea53.6cf7c8",
+        "type": "subflow:2d508562.6bf79a",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "env": [
+            {
+                "name": "BACKEND_API_ROOT",
+                "value": "BACKEND_API_ROOT",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_USERNAME",
+                "value": "BACKEND_USERNAME",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_PASSWORD",
+                "value": "BACKEND_PASSWORD",
+                "type": "env"
+            }
+        ],
+        "x": 310,
+        "y": 220,
+        "wires": [
+            [
+                "497386b7.92dda8"
+            ]
+        ]
+    },
+    {
+        "id": "a4c4c9c7.986408",
+        "type": "http in",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "url": "/v1/patient/:patientID",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 400,
+        "wires": [
+            [
+                "6c745163.e9836"
+            ]
+        ]
+    },
+    {
+        "id": "4b85a006.18488",
+        "type": "subflow:2d508562.6bf79a",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "env": [
+            {
+                "name": "BACKEND_API_ROOT",
+                "value": "BACKEND_API_ROOT",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_USERNAME",
+                "value": "BACKEND_USERNAME",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_PASSWORD",
+                "value": "BACKEND_PASSWORD",
+                "type": "env"
+            }
+        ],
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "fdc29ee3.8d16b"
+            ]
+        ]
+    },
+    {
+        "id": "c7821479.5f3328",
+        "type": "inject",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "topic": "",
+        "payload": "{\"patientID\":\"09e6fb7f-9b57-4eb6-b1cb-de721e60889c\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 70,
+        "y": 280,
+        "wires": [
+            [
+                "457014a6.f507ac"
+            ]
+        ]
+    },
+    {
+        "id": "fdc29ee3.8d16b",
+        "type": "http request",
+        "z": "6696950a.39ce5c",
+        "name": "GET Patient by ID",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "{{{settings.apiRoot}}}/v0/patients/{{{patientID}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "a3ccd333.74bc9",
+                "f5386f56.76e2e"
+            ]
+        ]
+    },
+    {
+        "id": "a3ccd333.74bc9",
+        "type": "debug",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 650,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "f5386f56.76e2e",
+        "type": "http response",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e8af3c92.701c9",
+        "type": "subflow:c52863fb.9bc86",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "env": [
+            {
+                "name": "TWILIO_ACCOUNT_SID",
+                "value": "TWILIO_ACCOUNT_SID",
+                "type": "env"
+            },
+            {
+                "name": "TWILIO_AUTH_TOKEN",
+                "value": "TWILIO_AUTH_TOKEN",
+                "type": "env"
+            },
+            {
+                "name": "TWILIO_FLOW_ID",
+                "value": "TWILIO_FLOW_ID",
+                "type": "env"
+            },
+            {
+                "name": "TWILIO_OUTBOUND_NUMBER",
+                "value": "TWILIO_OUTBOUND_NUMBER",
+                "type": "env"
+            }
+        ],
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "2ac09db5.83cd72"
+            ]
+        ]
+    },
+    {
+        "id": "d9b118cb.c83ee8",
+        "type": "inject",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "topic": "",
+        "payload": "{\"patientID\":\"09e6fb7f-9b57-4eb6-b1cb-de721e60889c\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 70,
+        "y": 220,
+        "wires": [
+            [
+                "658e01c5.9e5c7"
+            ]
+        ]
+    },
+    {
+        "id": "2926ba31.47e6e6",
+        "type": "http in",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "url": "/v1/patient/:patientID/calls",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 60,
+        "wires": [
+            [
+                "8570e20.3a5412"
+            ]
+        ]
+    },
+    {
+        "id": "2ac09db5.83cd72",
+        "type": "function",
+        "z": "f3501b4b.55c8b8",
+        "name": "prepare payload",
+        "func": "var twilioContext = {\n    patientId: msg.patientID,\n    fullname: msg.payload.name,\n\n}\nmsg.payload = {\n    From: msg.twilio.outboundNumber,\n    To: msg.payload.number,\n    Parameters: JSON.stringify (twilioContext)    \n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 450,
+        "y": 140,
+        "wires": [
+            [
+                "a691ab4b.4888b8",
+                "6cb17ef5.5dab8"
+            ]
+        ]
+    },
+    {
+        "id": "a691ab4b.4888b8",
+        "type": "http request",
+        "z": "f3501b4b.55c8b8",
+        "name": "POST Flow Execution",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "{{{twilio.flowExecutionURL}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 670,
+        "y": 140,
+        "wires": [
+            [
+                "b045f078.78bb1",
+                "6cb17ef5.5dab8"
+            ]
+        ]
+    },
+    {
+        "id": "b045f078.78bb1",
+        "type": "http response",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 740,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "6cb17ef5.5dab8",
+        "type": "debug",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 560,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6c745163.e9836",
+        "type": "function",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "func": "msg.patientID = msg.req.params.patientID\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 360,
+        "wires": [
+            [
+                "4b85a006.18488"
+            ]
+        ]
+    },
+    {
+        "id": "457014a6.f507ac",
+        "type": "function",
+        "z": "6696950a.39ce5c",
+        "name": "",
+        "func": "msg.patientID = msg.payload.patientID\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 190,
+        "y": 300,
+        "wires": [
+            [
+                "4b85a006.18488"
+            ]
+        ]
+    },
+    {
+        "id": "8570e20.3a5412",
+        "type": "function",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "func": "msg.patientID = msg.req.params.patientID\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 100,
+        "wires": [
+            [
+                "c35f4978.64e8d8"
+            ]
+        ]
+    },
+    {
+        "id": "c35f4978.64e8d8",
+        "type": "subflow:2d508562.6bf79a",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "env": [
+            {
+                "name": "BACKEND_API_ROOT",
+                "value": "BACKEND_API_ROOT",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_USERNAME",
+                "value": "BACKEND_USERNAME",
+                "type": "env"
+            },
+            {
+                "name": "BACKEND_PASSWORD",
+                "value": "BACKEND_PASSWORD",
+                "type": "env"
+            }
+        ],
+        "x": 330,
+        "y": 300,
+        "wires": [
+            [
+                "aa59e9c4.887978",
+                "454c9bd1.fe1744"
+            ]
+        ]
+    },
+    {
+        "id": "aa59e9c4.887978",
+        "type": "http request",
+        "z": "f3501b4b.55c8b8",
+        "name": "GET Patient by ID",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": false,
+        "url": "{{{settings.apiRoot}}}/v0/patients/{{{patientID}}}",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 510,
+        "y": 300,
+        "wires": [
+            [
+                "e8af3c92.701c9"
+            ]
+        ]
+    },
+    {
+        "id": "658e01c5.9e5c7",
+        "type": "function",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "func": "msg.patientID = msg.payload.patientID\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 190,
+        "y": 180,
+        "wires": [
+            [
+                "c35f4978.64e8d8"
+            ]
+        ]
+    },
+    {
+        "id": "454c9bd1.fe1744",
+        "type": "debug",
+        "z": "f3501b4b.55c8b8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 380,
+        "y": 340,
+        "wires": []
     }
 ]

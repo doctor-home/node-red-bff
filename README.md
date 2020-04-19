@@ -11,6 +11,9 @@ Some change
 This component decouples the backend components from the frontend. It also provides REST endpoints for the backend to initiate calls to the Twilio Voice APIs.
 
 ## Local Build
+ - Please create a ```.env``` file, use ```.env.example``` as template
+The
+
  - As an NodeJS / express app:
  ```bash
 npm install
@@ -19,21 +22,30 @@ open http://0.0.0.0:8080/
  ```
  - Local build and run using Docker 
  ```bash
-docker build . -t node-red-bff
-docker run -p 8080:8080 node-red-bff
+ # build and tag
+docker build . -t doctorathome/node-red-bff:latest
+ # set all env variables from .env 
+ # export TWILIO_ACCOUNT_SID=ACxxxx....
+
+ # run container on port 8080
+docker run -p 8080:8080 doctorathome/node-red-bff:latest
 open http://0.0.0.0:8080/
 ```
 ## Build and Deploy from Github to Azure Web App Containers
 This uses Github actions to deploy on Azure Web App Containers.
 See .github/workflows/azure.yml 
 
+On Azure Web Application, set the environment variables (instead .env) as Configuration > Application Setting
+
+ 
 
 ## Understand what's happening
 There are multiple "flows" (Tabs) in the editor. 
-The one called "Twilio Main Flow" is controlling the basic routing of webhook requests. You should NOT be required to change anything here.
-The "simple-flow" is controlling the Voice menues and command of the user, this is what we are working on right now.
+The flows publish several endpoints for convenient access to the backend and Twilio API:
 
-See the disabled "Demo" tab for examples on how to use the nodes.
-
-
-
+### Backend Access
+- GET /v1/clinicians
+- GET /v1/patients
+- GET /v1/patient/${patientID}
+- POST /v1/patient/${patientID}/calls
+- POST /v1/patient/${patientID}/health-report

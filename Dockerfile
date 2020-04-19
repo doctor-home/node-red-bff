@@ -33,5 +33,13 @@ RUN chmod -R 775 /app
 RUN chown -R node:root /app
 USER 1000
 
+ENV TWILIO_ACCOUNT_SID=
+ENV TWILIO_AUTH_TOKEN=
+ENV TWILIO_FLOW_ID=
+ENV TWILIO_OUTBOUND_NUMBER=
+ENV BACKEND_API_ROOT=http://localhost:7777/api/dah
+ENV BACKEND_USERNAME=default
+ENV BACKEND_PASSWORD=doctor_at_home
+
 
 CMD ["npm", "run", "start"]

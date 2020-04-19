@@ -3,5 +3,7 @@
     "description": "Workspace area for the doctor-at-home BFF service. ./projects contains git submodule repository with the actual Node-Red project files referenced in .config.json",
     "version": "0.0.1",
     "private": true,
-    "dependencies": {}
+    "dependencies": {
+        "node-red-dashboard": "~2.21.0"
+    }
 }
