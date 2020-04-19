@@ -1,6 +1,6 @@
 {
-    "name": "ping-service",
-    "description": "doctor-at-home-hackathon",
+    "name": "doctor-at-home-bff",
+    "description": "doctor-at-home-bff Node-Red flows",
     "version": "0.0.1",
     "dependencies": {},
     "node-red": {

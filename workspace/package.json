@@ -1,10 +1,7 @@
 {
-    "name": "mesh-red-workspace",
-    "description": "Workspace area for a mesh-red service. ./projects contains git submodule repository with the actual Node-Red project files referenced in .config.json",
+    "name": "doctor-at-home-bff-workspace",
+    "description": "Workspace area for the doctor-at-home BFF service. ./projects contains git submodule repository with the actual Node-Red project files referenced in .config.json",
     "version": "0.0.1",
     "private": true,
-    "dependencies": {
-        "node-red-contrib-azure-documentdb": "0.0.3",
-        "node-red-mongodb": "0.0.18"
-    }
+    "dependencies": {}
 }

@@ -1,27 +1,27 @@
 [
     {
-        "id": "d80ee57f.5f6c88",
+        "id": "27958b14.b63424",
         "type": "tab",
         "label": "Call Patient",
-        "disabled": true,
+        "disabled": false,
         "info": ""
     },
     {
-        "id": "6696950a.39ce5c",
+        "id": "2863068b.c6cf2a",
         "type": "tab",
         "label": "Query backend",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "fb0afa8b.2aa058",
+        "id": "aa0f12dc.254",
         "type": "tab",
         "label": "Twilio Status",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "2d508562.6bf79a",
+        "id": "14e26bdf.84eb54",
         "type": "subflow",
         "name": "JWT token",
         "info": "",
@@ -32,7 +32,7 @@
                 "y": 30,
                 "wires": [
                     {
-                        "id": "45e8b94f.9da4c8"
+                        "id": "512ce512.cf408c"
                     }
                 ]
             }
@@ -43,7 +43,7 @@
                 "y": 180,
                 "wires": [
                     {
-                        "id": "218eb139.ea35fe",
+                        "id": "70da0653.035f88",
                         "port": 0
                     }
                 ]
@@ -53,9 +53,18 @@
         "color": "#DDAA99"
     },
     {
-        "id": "f317ad0a.28371",
+        "id": "d3a9ee05.39e6c",
+        "type": "mongodb3",
+        "z": "",
+        "uri": "mongodb://doctor-at-home-backend-db.mongo.cosmos.azure.com:10255/doctor-at-home-backend-db?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@doctor-at-home-backend-db@",
+        "name": "Azure CosmosDB",
+        "options": "",
+        "parallelism": "-1"
+    },
+    {
+        "id": "3a1bfe7f.176b02",
         "type": "inject",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "",
         "topic": "",
         "payload": "{\"_id\":\"09e6fb7f-9b57-4eb6-b1cb-de721e60889c\"}",
@@ -68,14 +77,14 @@
         "y": 200,
         "wires": [
             [
-                "4d182122.a57"
+                "7ce483c0.c63f9c"
             ]
         ]
     },
     {
-        "id": "fbf19308.90bef",
+        "id": "3e46be60.a6fee2",
         "type": "http in",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "",
         "url": "v1/patient-call",
         "method": "post",
@@ -85,14 +94,14 @@
         "y": 120,
         "wires": [
             [
-                "4d182122.a57"
+                "7ce483c0.c63f9c"
             ]
         ]
     },
     {
-        "id": "61a924d3.3c940c",
+        "id": "c1828065.d4676",
         "type": "function",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "merge defaults, build request",
         "func": "\n// API info from global setings, msg.url is constructed here\nvar t = global.get('twilio')\nmsg.url = \"https://\"+t.accountSid+\":\"+t.authToken+\"@studio.twilio.com/v1/Flows/\"+t.flowId+\"/Executions\";\nmsg.headers = {}\nmsg.headers['content-type'] = \"application/x-www-form-urlencoded\"\n\n//  patient will be passed as context parameters into twilio flow\nvar p = msg.payload[0]; // we only have a single patient\nmsg.patient  = {\n    id: p._id,\n    fullname: p.name,\n    language: p.language,\n    phone: \"+41 79 342 123 9\", //p.phone, FIXME: global switch to reroute all to test number\n    clinicianID: p.clinicianID,\n    age: p.age,\n    preconditions: p.preconditions,\n    under_observation: p.under_observation,\n    from: msg.payload.from || \"+1 717 727 2384\", // FIXME: global setting\n}\n\n\n\n// Twilio Execution Payload\n// https://www.twilio.com/docs/studio/rest-api/execution\nmsg.payload = {\n    From: msg.patient.from,\n    To: msg.patient.phone,\n    Parameters: JSON.stringify (msg.patient)\n}\n\n\nreturn msg;",
         "outputs": 1,
@@ -101,15 +110,15 @@
         "y": 200,
         "wires": [
             [
-                "4c057e42.6e1a2",
-                "91e475a1.8eac48"
+                "2968f70f.300848",
+                "f36c254d.648ad8"
             ]
         ]
     },
     {
-        "id": "d71632f.45c21d",
+        "id": "6de06b94.8e48a4",
         "type": "http response",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -118,9 +127,9 @@
         "wires": []
     },
     {
-        "id": "4c057e42.6e1a2",
+        "id": "2968f70f.300848",
         "type": "debug",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -133,9 +142,9 @@
         "wires": []
     },
     {
-        "id": "91e475a1.8eac48",
+        "id": "f36c254d.648ad8",
         "type": "http request",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "d": true,
         "name": "Twilio Execution ",
         "method": "POST",
@@ -150,14 +159,14 @@
         "y": 140,
         "wires": [
             [
-                "d71632f.45c21d"
+                "6de06b94.8e48a4"
             ]
         ]
     },
     {
-        "id": "4d182122.a57",
+        "id": "7ce483c0.c63f9c",
         "type": "change",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "twilio settings(NOTE: move to env)",
         "rules": [
             {
@@ -176,13 +185,15 @@
         "x": 340,
         "y": 200,
         "wires": [
-            []
+            [
+                "c6c3496a.6ceaf8"
+            ]
         ]
     },
     {
-        "id": "d2950175.8471a",
+        "id": "322abc1c.1d5d04",
         "type": "debug",
-        "z": "6696950a.39ce5c",
+        "z": "2863068b.c6cf2a",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -195,9 +206,9 @@
         "wires": []
     },
     {
-        "id": "4ff1257b.4b706c",
+        "id": "b5c2bf4f.7a236",
         "type": "inject",
-        "z": "6696950a.39ce5c",
+        "z": "2863068b.c6cf2a",
         "name": "",
         "topic": "",
         "payload": "{\"_id\":\"09e6fb7f-9b57-4eb6-b1cb-de721e60889c\"}",
@@ -210,14 +221,31 @@
         "y": 60,
         "wires": [
             [
-                "c317bfca.eac96"
+                "9ffeea17.9b5878"
             ]
         ]
     },
     {
-        "id": "5a54110a.aec7b",
+        "id": "c6c3496a.6ceaf8",
+        "type": "mongodb3 in",
+        "z": "27958b14.b63424",
+        "service": "_ext_",
+        "configNode": "d3a9ee05.39e6c",
+        "name": "find patient by _id",
+        "collection": "PatientDTO",
+        "operation": "find.toArray",
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "3428e9b9.b32d96"
+            ]
+        ]
+    },
+    {
+        "id": "3428e9b9.b32d96",
         "type": "switch",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "",
         "property": "payload",
         "propertyType": "msg",
@@ -236,17 +264,17 @@
         "y": 260,
         "wires": [
             [
-                "61a924d3.3c940c"
+                "c1828065.d4676"
             ],
             [
-                "f5058e7f.eb527"
+                "e65ed276.b01e1"
             ]
         ]
     },
     {
-        "id": "f5058e7f.eb527",
+        "id": "e65ed276.b01e1",
         "type": "function",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "patient not found",
         "func": "msg.payload = {\n    error: \"true\",\n    message: \"Patient not found \"\n}\nreturn msg;",
         "outputs": 1,
@@ -255,15 +283,15 @@
         "y": 380,
         "wires": [
             [
-                "d71632f.45c21d",
-                "4c057e42.6e1a2"
+                "6de06b94.8e48a4",
+                "2968f70f.300848"
             ]
         ]
     },
     {
-        "id": "c3af60da.39a11",
+        "id": "22983094.dfadc",
         "type": "inject",
-        "z": "d80ee57f.5f6c88",
+        "z": "27958b14.b63424",
         "name": "invalid id",
         "topic": "",
         "payload": "{\"_id\":\"09e6fb7f-9b57-XXXX-b1cb-de721e60889c\"}",
@@ -276,14 +304,14 @@
         "y": 260,
         "wires": [
             [
-                "4d182122.a57"
+                "7ce483c0.c63f9c"
             ]
         ]
     },
     {
-        "id": "b6bead00.71f2d",
+        "id": "9ca6ccdb.9185a",
         "type": "http request",
-        "z": "6696950a.39ce5c",
+        "z": "2863068b.c6cf2a",
         "name": "GET Clinicians",
         "method": "GET",
         "ret": "obj",
@@ -297,15 +325,15 @@
         "y": 240,
         "wires": [
             [
-                "d2950175.8471a",
-                "180e0eb2.968fb1"
+                "322abc1c.1d5d04",
+                "2dc60b43.8df634"
             ]
         ]
     },
     {
-        "id": "f667cd06.f60d2",
+        "id": "efe1ae4e.c83fd",
         "type": "http in",
-        "z": "6696950a.39ce5c",
+        "z": "2863068b.c6cf2a",
         "name": "",
         "url": "/v1/clinicians",
         "method": "get",
@@ -315,14 +343,14 @@
         "y": 300,
         "wires": [
             [
-                "c317bfca.eac96"
+                "9ffeea17.9b5878"
             ]
         ]
     },
     {
-        "id": "180e0eb2.968fb1",
+        "id": "2dc60b43.8df634",
         "type": "http response",
-        "z": "6696950a.39ce5c",
+        "z": "2863068b.c6cf2a",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -331,9 +359,9 @@
         "wires": []
     },
     {
-        "id": "bac4e0a9.9fe37",
+        "id": "6305c76e.1d0788",
         "type": "function",
-        "z": "2d508562.6bf79a",
+        "z": "14e26bdf.84eb54",
         "name": "prepare token request",
         "func": "node.warn ('Refreshing JWT token...');\n\nvar settings = {\n    apiRoot: \"https://doctor-at-home-backend.azurewebsites.net/api/dah\",\n}\nmsg.settings = settings;\n\n\nmsg.payload = {\n    username: 'default',\n    password: 'doctor_at_home'\n}\nreturn msg;\n\n",
         "outputs": 1,
@@ -342,14 +370,14 @@
         "y": 200,
         "wires": [
             [
-                "7cfed4b.02d442c"
+                "a26580c1.060b2"
             ]
         ]
     },
     {
-        "id": "7cfed4b.02d442c",
+        "id": "a26580c1.060b2",
         "type": "http request",
-        "z": "2d508562.6bf79a",
+        "z": "14e26bdf.84eb54",
         "name": "request JWT token",
         "method": "POST",
         "ret": "obj",
@@ -363,14 +391,14 @@
         "y": 260,
         "wires": [
             [
-                "218eb139.ea35fe"
+                "70da0653.035f88"
             ]
         ]
     },
     {
-        "id": "218eb139.ea35fe",
+        "id": "70da0653.035f88",
         "type": "function",
-        "z": "2d508562.6bf79a",
+        "z": "14e26bdf.84eb54",
         "name": "store token and set HTTP Auth header",
         "func": "msg.backendToken = msg.payload.token;\n\n// next url\nmsg.headers = {}\nmsg.headers[\"Authorization\"] = \"Bearer \" + msg.backendToken;\n\n\nreturn msg;",
         "outputs": 1,
@@ -382,22 +410,22 @@
         ]
     },
     {
-        "id": "c317bfca.eac96",
-        "type": "subflow:2d508562.6bf79a",
-        "z": "6696950a.39ce5c",
+        "id": "9ffeea17.9b5878",
+        "type": "subflow:14e26bdf.84eb54",
+        "z": "2863068b.c6cf2a",
         "name": "",
         "x": 320,
         "y": 160,
         "wires": [
             [
-                "b6bead00.71f2d"
+                "9ca6ccdb.9185a"
             ]
         ]
     },
     {
-        "id": "45e8b94f.9da4c8",
+        "id": "512ce512.cf408c",
         "type": "switch",
-        "z": "2d508562.6bf79a",
+        "z": "14e26bdf.84eb54",
         "name": "empty backendToken?",
         "property": "backendToken",
         "propertyType": "msg",
@@ -416,10 +444,10 @@
         "y": 240,
         "wires": [
             [
-                "bac4e0a9.9fe37"
+                "6305c76e.1d0788"
             ],
             [
-                "218eb139.ea35fe"
+                "70da0653.035f88"
             ]
         ]
     }

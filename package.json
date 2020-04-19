@@ -1,6 +1,6 @@
 {
-  "name": "dah-node-red-flow",
-  "description": "Doctor@Home - Twilio IVR Control flow with node-red",
+  "name": "dah-node-red-bff-flow",
+  "description": "Doctor@Home - BFF component, controls Twilio and Backend",
   "version": "0.1.0",
   "author": "Florian Georg",
   "license": "MIT",
@@ -26,7 +26,6 @@
     "kube-probe": "^0.3.3",
     "morgan": "^1.10.0",
     "node-red": "^1.0.4",
-    "node-red-contrib-mongodb3": "^2.0.1",
     "startbootstrap-landing-page": "^5.0.7",
     "winston": "^3.2.1"
   },
