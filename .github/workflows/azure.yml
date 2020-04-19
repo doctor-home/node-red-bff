@@ -40,13 +40,13 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        docker build . -t doctorathome.azurecr.io/doctor-at-home-bff:${{ github.sha }}
-        docker push doctorathome.azurecr.io/doctor-at-home-bff:${{ github.sha }} 
+        docker build . -t doctorathome.azurecr.io/doctor-at-home-bff:latest
+        docker push doctorathome.azurecr.io/doctor-at-home-bff:latest
       
     - uses: azure/webapps-container-deploy@v1
       with:
         app-name: 'doctor-at-home-bff'
-        images: 'doctorathome.azurecr.io/doctor-at-home-bff:${{ github.sha }}'
+        images: 'doctorathome.azurecr.io/doctor-at-home-bff:latest'
     
     - name: Azure logout
       run: |
